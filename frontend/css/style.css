@@ -1,0 +1,195 @@
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      padding: 20px;
+      overflow: hidden;
+      position: relative;
+      transition: background-color 2s ease;
+      background-color: #17303c;
+      background-image: linear-gradient(rgba(5, 15, 22, 0.38), rgba(5, 15, 22, 0.42)), url('/assets/city-weather-background.jpg');
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: var(--weather-overlay, transparent);
+      transition: background 2s ease;
+    }
+
+    /* ---- CLOUDS ---- */
+    .cloud {
+      position: fixed;
+      z-index: 2;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50px;
+      animation: moveClouds linear infinite;
+    }
+    .cloud::before, .cloud::after {
+      content: '';
+      position: absolute;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+    }
+    .cloud-1 { width: 200px; height: 40px; top: 10%; animation-duration: 25s; }
+    .cloud-1::before { width: 80px; height: 80px; top: -40px; left: 30px; }
+    .cloud-1::after { width: 60px; height: 60px; top: -30px; left: 90px; }
+    .cloud-2 { width: 150px; height: 30px; top: 20%; animation-duration: 35s; animation-delay: -10s; }
+    .cloud-2::before { width: 60px; height: 60px; top: -30px; left: 20px; }
+    .cloud-2::after { width: 50px; height: 50px; top: -25px; left: 70px; }
+    .cloud-3 { width: 180px; height: 35px; top: 5%; animation-duration: 30s; animation-delay: -5s; }
+    .cloud-3::before { width: 70px; height: 70px; top: -35px; left: 25px; }
+    .cloud-3::after { width: 55px; height: 55px; top: -28px; left: 80px; }
+    @keyframes moveClouds {
+      from { left: -300px; }
+      to { left: 110%; }
+    }
+
+    /* ---- SUN ---- */
+    .sun {
+      position: fixed;
+      top: 60px;
+      right: 80px;
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, #ffe066, #ffb300);
+      border-radius: 50%;
+      box-shadow: 0 0 40px 15px rgba(255,200,0,0.4);
+      animation: pulseSun 3s ease-in-out infinite, rotateSun 12s linear infinite;
+      display: none;
+      z-index: 2;
+    }
+    .sun-ray {
+      position: absolute;
+      width: 6px;
+      border-radius: 3px;
+      background: rgba(255,220,50,0.7);
+      top: 50%;
+      left: 50%;
+      transform-origin: 0 0;
+    }
+    @keyframes pulseSun {
+      0%, 100% { box-shadow: 0 0 40px 15px rgba(255,200,0,0.4); }
+      50% { box-shadow: 0 0 70px 30px rgba(255,200,0,0.6); }
+    }
+    @keyframes rotateSun {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* ---- SNOW ---- */
+    .snowflake {
+      position: fixed;
+      top: -20px;
+      color: white;
+      font-size: 1.2em;
+      animation: snowfall linear infinite;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.8;
+    }
+    @keyframes snowfall {
+      0% { top: -20px; opacity: 0; transform: translateX(0) rotate(0deg); }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 110vh; transform: translateX(80px) rotate(360deg); opacity: 0; }
+    }
+
+    /* ---- WIND / LEAVES ---- */
+    .leaf {
+      position: fixed;
+      font-size: 1.4em;
+      animation: blowWind linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes blowWind {
+      0% { left: -50px; opacity: 0; transform: rotate(0deg) translateY(0); }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { left: 110%; transform: rotate(720deg) translateY(-60px); opacity: 0; }
+    }
+
+    /* ---- STARS ---- */
+    .star {
+      position: fixed;
+      width: 3px;
+      height: 3px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.4); }
+    }
+
+    /* ---- LIGHTNING ---- */
+    .lightning {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255,255,255,0);
+      animation: flash 8s infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes flash {
+      0%, 92%, 96%, 100% { background: rgba(255,255,255,0); }
+      93%, 95% { background: rgba(255,255,255,0.08); }
+    }
+
+    /* ---- CARD ---- */
+    .container {
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px;
+      width: min(420px, 100%);
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    h1 { font-size: 28px; margin-bottom: 20px; }
+    .search-area { display: flex; gap: 10px; margin-bottom: 30px; }
+    input {
+      flex: 1; padding: 12px; border: none;
+      border-radius: 10px; font-size: 16px;
+      background: rgba(255,255,255,0.2); color: white; outline: none;
+    }
+    input::placeholder { color: rgba(255,255,255,0.6); }
+    button {
+      padding: 12px 20px; background: #e94560; color: white;
+      border: none; border-radius: 10px; cursor: pointer; font-size: 16px;
+    }
+    button:hover { background: #c73652; }
+    .weather-card { display: none; }
+    .weather-card.show { display: block; }
+    .city-name { font-size: 32px; font-weight: bold; margin-bottom: 5px; }
+    .country { font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 20px; }
+    .temp {
+      font-size: 72px; font-weight: bold; margin-bottom: 10px;
+      transition: color 1s ease;
+    }
+    .description { font-size: 18px; text-transform: capitalize; margin-bottom: 30px; }
+    .details { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .detail-box { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; }
+    .detail-label { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 5px; }
+    .detail-value { font-size: 20px; font-weight: bold; }
+    .error { color: #e94560; font-size: 14px; margin-top: 10px; display: none; }
+    .error.show { display: block; }
+    .loading { display: none; color: rgba(255,255,255,0.7); }
+    .loading.show { display: block; }

@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: weather-app
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: cd backend && npm ci
+    startCommand: cd backend && npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OPENWEATHERMAP_API_KEY
+        sync: false

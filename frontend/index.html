@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Clouds -->
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+
+  <!-- Sun -->
+  <div class="sun" id="sun"></div>
+
+  <!-- Lightning -->
+  <div class="lightning" id="lightning"></div>
+
+  <!-- Snow -->
+  <div id="snow"></div>
+
+  <!-- Wind/Leaves -->
+  <div id="wind"></div>
+
+  <!-- Stars -->
+  <div id="stars"></div>
+
+  <div class="container">
+    <h1>🌦 Weather App</h1>
+    <form class="search-area" id="searchForm">
+      <input type="text" id="cityInput" placeholder="Enter city name..." />
+      <button type="submit">Search</button>
+    </form>
+    <p class="loading" id="loading">Fetching weather...</p>
+    <p class="error" id="error"></p>
+    <div class="weather-card" id="weatherCard">
+      <div class="city-name" id="cityName"></div>
+      <div class="country" id="country"></div>
+      <div class="temp" id="temp"></div>
+      <div class="description" id="description"></div>
+      <div class="details">
+        <div class="detail-box">
+          <div class="detail-label">Feels Like</div>
+          <div class="detail-value" id="feelsLike"></div>
+        </div>
+        <div class="detail-box">
+          <div class="detail-label">Humidity</div>
+          <div class="detail-value" id="humidity"></div>
+        </div>
+        <div class="detail-box">
+          <div class="detail-label">Wind Speed</div>
+          <div class="detail-value" id="wind-speed"></div>
+        </div>
+        <div class="detail-box">
+          <div class="detail-label">Pressure</div>
+          <div class="detail-value" id="pressure"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js" defer></script>
+</body>
+</html>ss
