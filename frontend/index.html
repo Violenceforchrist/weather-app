@@ -3,40 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d18">
   <title>Weather App</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <div class="cloud cloud-1" aria-hidden="true"></div>
+  <div class="cloud cloud-2" aria-hidden="true"></div>
+  <div class="cloud cloud-3" aria-hidden="true"></div>
+  <div class="sun" id="sun" aria-hidden="true"></div>
+  <div class="lightning" id="lightning" aria-hidden="true"></div>
+  <div id="snow" aria-hidden="true"></div>
+  <div id="wind" aria-hidden="true"></div>
+  <div id="stars" aria-hidden="true"></div>
 
-  <!-- Clouds -->
-  <div class="cloud cloud-1"></div>
-  <div class="cloud cloud-2"></div>
-  <div class="cloud cloud-3"></div>
-
-  <!-- Sun -->
-  <div class="sun" id="sun"></div>
-
-  <!-- Lightning -->
-  <div class="lightning" id="lightning"></div>
-
-  <!-- Snow -->
-  <div id="snow"></div>
-
-  <!-- Wind/Leaves -->
-  <div id="wind"></div>
-
-  <!-- Stars -->
-  <div id="stars"></div>
-
-  <div class="container">
+  <main class="container">
     <h1>🌦 Weather App</h1>
+    <p class="tagline">A little forecast for wherever you are.</p>
+
     <form class="search-area" id="searchForm">
-      <input type="text" id="cityInput" placeholder="Enter city name..." />
+      <div class="search-input-wrap">
+        <label class="visually-hidden" for="cityInput">City name</label>
+        <input
+          type="text"
+          id="cityInput"
+          placeholder="Enter a city name..."
+          autocomplete="off"
+          aria-controls="recentSearches"
+          aria-autocomplete="list"
+        >
+        <div
+          class="recent-searches"
+          id="recentSearches"
+          role="listbox"
+          aria-label="Recent searches"
+          hidden
+        ></div>
+      </div>
       <button type="submit">Search</button>
     </form>
-    <p class="loading" id="loading">Fetching weather...</p>
-    <p class="error" id="error"></p>
-    <div class="weather-card" id="weatherCard">
+
+    <p class="loading" id="loading" role="status" aria-live="polite">Fetching weather...</p>
+    <p class="error" id="error" role="alert"></p>
+
+    <section class="weather-card" id="weatherCard" aria-live="polite">
       <div class="city-name" id="cityName"></div>
       <div class="country" id="country"></div>
       <div class="temp" id="temp"></div>
@@ -59,9 +69,99 @@
           <div class="detail-value" id="pressure"></div>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
   <script src="/js/app.js" defer></script>
+  <script>
+    (() => {
+      const form = document.getElementById("searchForm");
+      const input = document.getElementById("cityInput");
+      const dropdown = document.getElementById("recentSearches");
+      const storageKey = "weatherRecentSearches";
+      let recentSearches = [];
+
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        if (Array.isArray(saved)) {
+          recentSearches = saved
+            .filter(city => typeof city === "string")
+            .slice(0, 5);
+        }
+      } catch {
+        // Continue if localStorage contains invalid data or is unavailable.
+      }
+
+      function saveSearches() {
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(recentSearches));
+        } catch {
+          // The search form still works if localStorage is unavailable.
+        }
+      }
+
+      function renderSearches() {
+        dropdown.replaceChildren();
+
+        recentSearches.forEach(city => {
+          const row = document.createElement("div");
+          row.className = "recent-search-item";
+
+          const cityButton = document.createElement("button");
+          cityButton.type = "button";
+          cityButton.className = "recent-search-city";
+          cityButton.textContent = city;
+          cityButton.setAttribute("role", "option");
+          cityButton.addEventListener("click", () => {
+            input.value = city;
+            dropdown.hidden = true;
+            form.requestSubmit();
+          });
+
+          const deleteButton = document.createElement("button");
+          deleteButton.type = "button";
+          deleteButton.className = "recent-search-delete";
+          deleteButton.textContent = "×";
+          deleteButton.setAttribute("aria-label", `Remove ${city}`);
+          deleteButton.addEventListener("pointerdown", event => event.preventDefault());
+          deleteButton.addEventListener("click", () => {
+            recentSearches = recentSearches.filter(item => item !== city);
+            saveSearches();
+            renderSearches();
+          });
+
+          row.append(cityButton, deleteButton);
+          dropdown.appendChild(row);
+        });
+
+        dropdown.hidden =
+          document.activeElement !== input || recentSearches.length === 0;
+      }
+
+      input.addEventListener("focus", renderSearches);
+      input.addEventListener("input", renderSearches);
+
+      form.addEventListener("submit", () => {
+        const city = input.value.trim();
+        if (!city) return;
+
+        recentSearches = [
+          city,
+          ...recentSearches.filter(
+            item => item.toLowerCase() !== city.toLowerCase()
+          )
+        ].slice(0, 5);
+
+        saveSearches();
+        renderSearches();
+      });
+
+      document.addEventListener("pointerdown", event => {
+        if (!event.target.closest(".search-input-wrap")) {
+          dropdown.hidden = true;
+        }
+      });
+    })();
+  </script>
 </body>
-</html>ss
+</html>
