@@ -3,165 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080d18">
-  <title>Weather App</title>
+  <meta name="theme-color" content="#080808">
+  <title>Meteor — Weather dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <div class="cloud cloud-1" aria-hidden="true"></div>
-  <div class="cloud cloud-2" aria-hidden="true"></div>
-  <div class="cloud cloud-3" aria-hidden="true"></div>
-  <div class="sun" id="sun" aria-hidden="true"></div>
-  <div class="lightning" id="lightning" aria-hidden="true"></div>
-  <div id="snow" aria-hidden="true"></div>
-  <div id="wind" aria-hidden="true"></div>
-  <div id="stars" aria-hidden="true"></div>
-
-  <main class="container">
-    <h1>🌦 Weather App</h1>
-    <p class="tagline">A little forecast for wherever you are.</p>
-
-    <form class="search-area" id="searchForm">
-      <div class="search-input-wrap">
-        <label class="visually-hidden" for="cityInput">City name</label>
-        <input
-          type="text"
-          id="cityInput"
-          placeholder="Enter a city name..."
-          autocomplete="off"
-          aria-controls="recentSearches"
-          aria-autocomplete="list"
-        >
-        <div
-          class="recent-searches"
-          id="recentSearches"
-          role="listbox"
-          aria-label="Recent searches"
-          hidden
-        ></div>
-      </div>
-      <button type="submit">Search</button>
-    </form>
-
-    <p class="loading" id="loading" role="status" aria-live="polite">Fetching weather...</p>
-    <p class="error" id="error" role="alert"></p>
-
-    <section class="weather-card" id="weatherCard" aria-live="polite">
-      <div class="city-name" id="cityName"></div>
-      <div class="country" id="country"></div>
-      <div class="temp" id="temp"></div>
-      <div class="description" id="description"></div>
-      <div class="details">
-        <div class="detail-box">
-          <div class="detail-label">Feels Like</div>
-          <div class="detail-value" id="feelsLike"></div>
-        </div>
-        <div class="detail-box">
-          <div class="detail-label">Humidity</div>
-          <div class="detail-value" id="humidity"></div>
-        </div>
-        <div class="detail-box">
-          <div class="detail-label">Wind Speed</div>
-          <div class="detail-value" id="wind-speed"></div>
-        </div>
-        <div class="detail-box">
-          <div class="detail-label">Pressure</div>
-          <div class="detail-value" id="pressure"></div>
-        </div>
+  <main class="weather-dashboard">
+    <aside class="sidebar">
+      <a class="profile" href="#overview" aria-label="Your profile"><span class="avatar">M</span><span><small>Howdy,</small><strong>Matson Vox</strong></span></a>
+      <nav class="side-nav" aria-label="Dashboard navigation">
+        <a class="nav-item active" href="#overview" aria-label="Overview">◒</a><a class="nav-item" href="#search" aria-label="Search">⌕</a><a class="nav-item" href="#overview" aria-label="Home">⌂</a><a class="nav-item" href="#cities" aria-label="Statistics">▥</a><a class="nav-item" href="#alerts" aria-label="Alerts">♧</a><a class="nav-item" href="#forecast" aria-label="Forecast">◴</a><a class="nav-item" href="#cities" aria-label="Saved places">▤</a>
+      </nav>
+      <div class="sidebar-bottom"><button class="nav-item signout" type="button" aria-label="Sign out">↪</button><button class="theme-toggle" type="button" aria-label="Toggle theme">☼</button></div>
+    </aside>
+    <section class="dashboard-content" id="overview">
+      <header class="topbar"><form class="search-form" id="searchForm"><label class="visually-hidden" for="cityInput">Search location</label><input id="cityInput" type="search" placeholder="Search location" autocomplete="off" aria-controls="recentSearches" aria-autocomplete="list"><button type="submit" aria-label="Search location">⌕</button><div class="recent-searches" id="recentSearches" role="listbox" aria-label="Recent searches" hidden></div></form></header>
+      <div class="dashboard-grid">
+        <section class="current-column" aria-label="Current weather">
+          <article class="current-card"><div class="card-topline"><span class="location-pill" id="locationPill">Haveli, IN</span><time id="currentTime">11:45 PM</time></div><div class="condition-row"><span class="weather-icon large" id="weatherIcon">⛅</span><span id="description">Partly Cloudy</span></div><div class="temperature"><span id="temp">30</span><sup>°C</sup></div><div class="metrics"><div><span>Pressure</span><strong id="pressure">500mb</strong></div><div><span>Humidity</span><strong id="humidity">84%</strong></div><div><span>Visibility</span><strong id="visibility">3.5 km</strong></div></div></article>
+          <article class="sun-card"><span class="sun-card-icon">☼</span><div><span>Sunrise</span><strong id="sunrise">5:25 AM</strong></div></article><article class="sun-card"><span class="sun-card-icon moon">☁</span><div><span>Sunset</span><strong id="sunset">6:45 PM</strong></div></article><p class="status-message" id="loading" role="status" aria-live="polite"></p><p class="status-message error" id="error" role="alert"></p>
+        </section>
+        <section class="main-column"><article class="forecast-card" id="forecast"><div class="forecast-heading"><span class="adviser">Weather adviser</span><button type="button">More details</button></div><div class="forecast-list" id="forecastList"><div class="forecast-day"><span>Monday</span><b>⛅</b><strong>20° C</strong></div><div class="forecast-day"><span>Tuesday</span><b>🌧️</b><strong>20° C</strong></div><div class="forecast-day"><span>Wednesday</span><b>🌧️</b><strong>20° C</strong></div><div class="forecast-day"><span>Thursday</span><b>🌧️</b><strong>20° C</strong></div></div></article>
+          <section class="cities-section" id="cities"><div class="section-heading"><h1>Other cities</h1><button class="show-all" type="button">Show all</button></div><div class="city-grid" id="cityGrid"><article class="city-card"><div><h2>Florida, US</h2><p>Mostly Sunny</p></div><div class="city-temp"><span>🌦️</span><strong>20° C</strong></div></article><article class="city-card"><div><h2>NYC, US</h2><p>Mostly Cloudy</p></div><div class="city-temp"><span>🌤️</span><strong>23° C</strong></div></article><article class="city-card"><div><h2>Haveli, US</h2><p>Partly Cloudy</p></div><div class="city-temp"><span>🌧️</span><strong>30° C</strong></div></article><article class="city-card"><div><h2>LYPS, US</h2><p>Mostly Cloudy</p></div><div class="city-temp"><span>🌤️</span><strong>23° C</strong></div></article></div></section>
+        </section>
+        <aside class="subscription-card" id="alerts"><div class="subscription-overlay"><h2>Subscribe</h2><p>Stay Ahead of the Weather!<br>Subscribe to our Newsletter.</p><form id="subscribeForm"><label class="visually-hidden" for="emailInput">Email address</label><input id="emailInput" type="email" placeholder="Enter email"><button type="submit">→</button></form><small id="subscribeMessage" aria-live="polite"></small></div></aside>
       </div>
     </section>
-  </main>
-
-  <script src="/js/app.js" defer></script>
-  <script>
-    (() => {
-      const form = document.getElementById("searchForm");
-      const input = document.getElementById("cityInput");
-      const dropdown = document.getElementById("recentSearches");
-      const storageKey = "weatherRecentSearches";
-      let recentSearches = [];
-
-      try {
-        const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
-        if (Array.isArray(saved)) {
-          recentSearches = saved
-            .filter(city => typeof city === "string")
-            .slice(0, 5);
-        }
-      } catch {
-        // Continue if localStorage contains invalid data or is unavailable.
-      }
-
-      function saveSearches() {
-        try {
-          localStorage.setItem(storageKey, JSON.stringify(recentSearches));
-        } catch {
-          // The search form still works if localStorage is unavailable.
-        }
-      }
-
-      function renderSearches() {
-        dropdown.replaceChildren();
-
-        recentSearches.forEach(city => {
-          const row = document.createElement("div");
-          row.className = "recent-search-item";
-
-          const cityButton = document.createElement("button");
-          cityButton.type = "button";
-          cityButton.className = "recent-search-city";
-          cityButton.textContent = city;
-          cityButton.setAttribute("role", "option");
-          cityButton.addEventListener("click", () => {
-            input.value = city;
-            dropdown.hidden = true;
-            form.requestSubmit();
-          });
-
-          const deleteButton = document.createElement("button");
-          deleteButton.type = "button";
-          deleteButton.className = "recent-search-delete";
-          deleteButton.textContent = "×";
-          deleteButton.setAttribute("aria-label", `Remove ${city}`);
-          deleteButton.addEventListener("pointerdown", event => event.preventDefault());
-          deleteButton.addEventListener("click", () => {
-            recentSearches = recentSearches.filter(item => item !== city);
-            saveSearches();
-            renderSearches();
-          });
-
-          row.append(cityButton, deleteButton);
-          dropdown.appendChild(row);
-        });
-
-        dropdown.hidden =
-          document.activeElement !== input || recentSearches.length === 0;
-      }
-
-      input.addEventListener("focus", renderSearches);
-      input.addEventListener("input", renderSearches);
-
-      form.addEventListener("submit", () => {
-        const city = input.value.trim();
-        if (!city) return;
-
-        recentSearches = [
-          city,
-          ...recentSearches.filter(
-            item => item.toLowerCase() !== city.toLowerCase()
-          )
-        ].slice(0, 5);
-
-        saveSearches();
-        renderSearches();
-      });
-
-      document.addEventListener("pointerdown", event => {
-        if (!event.target.closest(".search-input-wrap")) {
-          dropdown.hidden = true;
-        }
-      });
-    })();
-  </script>
+  </main><script src="/js/app.js" defer></script>
 </body>
 </html>
