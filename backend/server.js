@@ -14,10 +14,17 @@ app.use(express.static(FRONTEND_DIR));
 
 app.get('/api/weather', async (req, res) => {
   const city = typeof req.query.city === 'string' ? req.query.city.trim() : '';
-  if (!city) {
+  const latitude = typeof req.query.lat === 'string' ? Number(req.query.lat) : NaN;
+  const longitude = typeof req.query.lon === 'string' ? Number(req.query.lon) : NaN;
+  const requestedLocation = 'lat' in req.query || 'lon' in req.query;
+
+  if (requestedLocation && (!Number.isFinite(latitude) || !Number.isFinite(longitude) || Math.abs(latitude) > 90 || Math.abs(longitude) > 180)) {
+    return res.status(400).json({ error: 'The supplied location is invalid.' });
+  }
+  if (!requestedLocation && !city) {
     return res.status(400).json({ error: 'Enter a city name to search.' });
   }
-  if (city.length > 80 || !CITY_PATTERN.test(city) || !/[\p{L}\p{N}]/u.test(city)) {
+  if (!requestedLocation && (city.length > 80 || !CITY_PATTERN.test(city) || !/[\p{L}\p{N}]/u.test(city))) {
     return res.status(400).json({ error: 'Enter a valid city name (up to 80 characters).' });
   }
   if (!API_KEY) {
@@ -26,7 +33,12 @@ app.get('/api/weather', async (req, res) => {
   }
 
   const url = new URL('https://api.openweathermap.org/data/2.5/weather');
-  url.searchParams.set('q', city);
+  if (requestedLocation) {
+    url.searchParams.set('lat', String(latitude));
+    url.searchParams.set('lon', String(longitude));
+  } else {
+    url.searchParams.set('q', city);
+  }
   url.searchParams.set('appid', API_KEY);
   url.searchParams.set('units', 'metric');
 
@@ -35,7 +47,7 @@ app.get('/api/weather', async (req, res) => {
   try {
     const upstream = await fetch(url, { signal: controller.signal });
     if (upstream.status === 404) {
-      return res.status(404).json({ error: 'City not found. Check the spelling and try again.' });
+      return res.status(404).json({ error: requestedLocation ? 'Weather is unavailable for this location.' : 'City not found. Check the spelling and try again.' });
     }
     if (upstream.status === 401) {
       console.error('OpenWeatherMap rejected the configured API key.');

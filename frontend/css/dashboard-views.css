@@ -1,0 +1,77 @@
+/* Each navigation item opens one focused dashboard view. */
+body[data-view="search"] .dashboard-grid {
+  display: block;
+  max-width: 560px;
+  margin: 0 auto;
+}
+body[data-view="search"] .main-column,
+body[data-view="search"] .subscription-card,
+body[data-view="search"] .sun-card { display: none; }
+body[data-view="search"] .current-column { display: block; }
+body[data-view="search"] .current-card { min-height: 360px; }
+
+body[data-view="home"] .topbar,
+body[data-view="statistics"] .topbar,
+body[data-view="alerts"] .topbar,
+body[data-view="forecast"] .topbar,
+body[data-view="cities"] .topbar { display: none; }
+
+body[data-view="home"] .dashboard-grid,
+body[data-view="statistics"] .dashboard-grid {
+  display: block;
+  max-width: 560px;
+  margin: 56px auto 0;
+}
+body[data-view="home"] .main-column,
+body[data-view="home"] .subscription-card,
+body[data-view="statistics"] .main-column,
+body[data-view="statistics"] .subscription-card { display: none; }
+
+body[data-view="statistics"] .current-card { min-height: 190px; }
+body[data-view="statistics"] .card-topline,
+body[data-view="statistics"] .condition-row,
+body[data-view="statistics"] .temperature,
+body[data-view="statistics"] .sun-card { display: none; }
+body[data-view="statistics"] .metrics {
+  margin-top: 42px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+body[data-view="forecast"] .dashboard-grid,
+body[data-view="cities"] .dashboard-grid,
+body[data-view="alerts"] .dashboard-grid {
+  display: block;
+  max-width: 760px;
+  margin: 56px auto 0;
+}
+body[data-view="forecast"] .current-column,
+body[data-view="forecast"] .subscription-card,
+body[data-view="forecast"] .cities-section,
+body[data-view="cities"] .current-column,
+body[data-view="cities"] .subscription-card,
+body[data-view="cities"] .forecast-card,
+body[data-view="alerts"] .current-column,
+body[data-view="alerts"] .main-column { display: none; }
+body[data-view="forecast"] .forecast-card { min-height: 440px; }
+body[data-view="alerts"] .subscription-card {
+  display: block;
+  max-width: 410px;
+  min-height: 520px;
+  margin: auto;
+}
+body[data-view="cities"] .city-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+@media (max-width: 760px) {
+  .side-nav .nav-item:nth-child(n + 6) { display: grid; }
+
+  body[data-view="search"] .dashboard-grid,
+  body[data-view="home"] .dashboard-grid,
+  body[data-view="statistics"] .dashboard-grid,
+  body[data-view="forecast"] .dashboard-grid,
+  body[data-view="cities"] .dashboard-grid,
+  body[data-view="alerts"] .dashboard-grid { margin-top: 20px; }
+
+  body[data-view="cities"] .city-grid { grid-template-columns: 1fr; }
+  body[data-view="statistics"] .metrics { gap: 8px; }
+  body[data-view="statistics"] .metrics strong { font-size: 15px; }
+}
